@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:auth-db
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+  h2:
+    console:
+      path: /h2-console
+      settings.trace: false
+      settings.web-allow-others: false
+
+server:
+  port: 8081
+  servlet:
+    context-path: /auth-service
