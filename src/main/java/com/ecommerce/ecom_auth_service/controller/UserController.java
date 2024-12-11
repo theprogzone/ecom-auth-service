@@ -28,4 +28,10 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody @Valid LoginDTO loginDTO) {
         return new ResponseEntity<>(userService.login(loginDTO), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/validateToken")
+    public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
+        userService.validateToken(token);
+        return new ResponseEntity<>("Valid token", HttpStatus.OK);
+    }
 }

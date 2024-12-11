@@ -8,6 +8,7 @@ import com.ecommerce.ecom_auth_service.repository.UserRepository;
 import com.ecommerce.ecom_auth_service.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -52,5 +54,17 @@ public class UserServiceImpl implements UserService {
         claims.put("email", optionalUser.get().getEmail());
         claims.put("role", "ADMIN");
         return jwtUtil.generateJwtToken(optionalUser.get().getEmail(), claims);
+    }
+
+    @Override
+    @SneakyThrows
+    public void validateToken(String token) {
+        log.info("Validate token");
+        jwtUtil.validateToken(token);
+        String userName = jwtUtil.extractUsername(token);
+        Optional<User> optionalUser = userRepository.findByEmail(userName);
+        if (optionalUser.isEmpty()) {
+            throw new ValidationException("Invalid username");
+        }
     }
 }

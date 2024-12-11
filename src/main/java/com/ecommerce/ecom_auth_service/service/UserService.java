@@ -7,4 +7,6 @@ public interface UserService {
     void registerUser(RegisterDTO registerDTO);
 
     String login(LoginDTO loginDTO);
+
+    void validateToken(String token);
 }
