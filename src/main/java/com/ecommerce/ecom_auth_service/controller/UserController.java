@@ -17,18 +17,32 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Register the user
+     * Inserts user email and password
+     */
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody @Valid RegisterDTO registerDTO) {
         userService.registerUser(registerDTO);
     }
 
+    /**
+     * Generate the JWT token and return it to front end in the successful login
+     * @param loginDTO
+     * @return
+     */
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> login(@RequestBody @Valid LoginDTO loginDTO) {
         return new ResponseEntity<>(userService.login(loginDTO), HttpStatus.OK);
     }
 
+    /**
+     * Validate the JWT token by considering token expiration time and username in token
+     * @param token
+     * @return
+     */
     @GetMapping(value = "/validateToken")
     public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
         userService.validateToken(token);

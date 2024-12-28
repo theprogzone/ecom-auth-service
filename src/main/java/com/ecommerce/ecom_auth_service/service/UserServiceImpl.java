@@ -43,13 +43,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @SneakyThrows
     public String login(LoginDTO loginDTO) {
+        // Load the user from database
         Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getUsername());
+        // If user not exists throw exception
         if (optionalUser.isEmpty()) {
             throw new ValidationException("User cannot find");
         }
+        // If user exists then compare the passwords
         if (!passwordEncoder.matches(loginDTO.getPassword(), optionalUser.get().getPassword())) {
             throw new ValidationException("Incorrect password");
         }
+        // Generate the JWT token
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", optionalUser.get().getEmail());
         claims.put("role", "ADMIN");
@@ -60,9 +64,13 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     public void validateToken(String token) {
         log.info("Validate token");
+        // Validate the token expiration time
         jwtUtil.validateToken(token);
+        // If the token is not expired, then validate the user email
         String userName = jwtUtil.extractUsername(token);
+        // Load the user from DB using username (email)
         Optional<User> optionalUser = userRepository.findByEmail(userName);
+        // If the user is not exists, then throwing ValidationException
         if (optionalUser.isEmpty()) {
             throw new ValidationException("Invalid username");
         }

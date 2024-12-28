@@ -6,6 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * Global exception handler
+ * All the exceptions throwing in the application can be captured here
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

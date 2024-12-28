@@ -24,10 +24,10 @@ public class JWTUtil {
     public String generateJwtToken(String subject, Map<String, Object> claims) {
         return Jwts.builder()
                 .header().add("typ", "JWT").and()
-                .claims(claims)
-                .subject(subject)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .claims(claims) // Setting some metadata. Ex: User email, user role
+                .subject(subject) // Setting the token subject as email of the user
+                .issuedAt(new Date(System.currentTimeMillis())) // Token creation time
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // Token expiration time is 30 minutes
                 .signWith(getKey())
                 .compact();
     }
@@ -38,6 +38,7 @@ public class JWTUtil {
 
     @SneakyThrows
     public void validateToken(String token) {
+        // Check whether the token is expired or not. If expired then throw ValidationException
         if (isTokenExpired(token)) {
             log.error("Token expired");
             throw new ValidationException("Token expired");
